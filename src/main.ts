@@ -14,9 +14,10 @@ async function bootstrap() {
   const config = app.get(ConfigService);
   const port = config.get('PORT', 3333);
   const reflector = app.get(Reflector);
+  const prefix = config.get('API_PREFIX', 'api');
 
   app.enableCors();
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix(prefix);
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',

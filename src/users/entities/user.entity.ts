@@ -1,7 +1,7 @@
 import { BeforeInsert, Column, Entity } from 'typeorm';
 import { BaseSchema } from 'src/database/base-schema';
 import { Exclude } from 'class-transformer';
-import { hashSync, compareSync, genSaltSync, compare } from 'bcrypt';
+import { hashSync, compareSync, genSaltSync } from 'bcrypt';
 
 @Entity()
 export class User extends BaseSchema {
@@ -17,6 +17,9 @@ export class User extends BaseSchema {
 
   @Column({ nullable: true })
   avatar: string;
+
+  @Column('text', { default: [], array: true })
+  permissions: string[];
 
   hashPassword() {
     const salt = genSaltSync(10);
