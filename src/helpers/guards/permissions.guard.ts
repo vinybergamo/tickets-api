@@ -1,8 +1,8 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
@@ -25,7 +25,7 @@ export class PermissionsGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    if (!user) throw new UnauthorizedException('UNAUTHORIZED');
+    if (!user) throw new ForbiddenException('FORBIDDEN');
 
     const userPermissions = user.permissions || [];
 
@@ -33,9 +33,7 @@ export class PermissionsGuard implements CanActivate {
       userPermissions.includes(permission),
     );
 
-    if (!hasPermission) {
-      throw new UnauthorizedException('UNAUTHORIZED');
-    }
+    if (!hasPermission) throw new ForbiddenException('FORBIDDEN');
 
     return true;
   }

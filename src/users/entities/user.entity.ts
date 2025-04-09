@@ -1,7 +1,8 @@
-import { BeforeInsert, Column, Entity } from 'typeorm';
+import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
 import { BaseSchema } from 'src/database/base-schema';
 import { Exclude } from 'class-transformer';
 import { hashSync, compareSync, genSaltSync } from 'bcrypt';
+import { Event } from '@/events/entities/event.entity';
 
 @Entity()
 export class User extends BaseSchema {
@@ -20,6 +21,11 @@ export class User extends BaseSchema {
 
   @Column('text', { default: [], array: true })
   permissions: string[];
+
+  @OneToMany(() => Event, (event) => event.user, {
+    cascade: ['insert', 'update', 'remove', 'soft-remove'],
+  })
+  events: Event[];
 
   hashPassword() {
     const salt = genSaltSync(10);
