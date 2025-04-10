@@ -3,12 +3,21 @@ import { BaseSchema } from 'src/database/base-schema';
 import { Exclude } from 'class-transformer';
 import { hashSync, compareSync, genSaltSync } from 'bcrypt';
 import { Event } from '@/events/entities/event.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class User extends BaseSchema {
+  @ApiProperty({
+    description: 'User name',
+    example: 'John Doe',
+  })
   @Column()
   name: string;
 
+  @ApiProperty({
+    description: 'User email',
+    example: 'johndoe@email.com',
+  })
   @Column()
   email: string;
 
@@ -16,14 +25,22 @@ export class User extends BaseSchema {
   @Column()
   password: string;
 
+  @ApiProperty({
+    description: 'User Avatar',
+    example: 'https://example.com/avatar.jpg',
+  })
   @Column({ nullable: true })
   avatar: string;
 
+  @ApiProperty({
+    description: 'User permissions',
+    example: ['users:read', 'users:write'],
+  })
   @Column('text', { default: [], array: true })
   permissions: string[];
 
   @OneToMany(() => Event, (event) => event.user, {
-    cascade: ['insert', 'update', 'remove', 'soft-remove'],
+    cascade: true,
   })
   events: Event[];
 
